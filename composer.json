@@ -1,0 +1,44 @@
+{
+    "name": "best-it/license-check",
+    "description": "Tool to check licenses of used packages.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "best it AG",
+            "email": "info@bestit.de"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "BestIt\\LicenseCheck\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BestIt\\LicenseCheck\\": "tests"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "symfony/config": "^5.2",
+        "symfony/console": "^5.2",
+        "symfony/dependency-injection": "^5.2",
+        "symfony/finder": "^5.2",
+        "symfony/yaml": "^5.2"
+    },
+    "require-dev": {
+        "best-it/php_codesniffer": "^3.4",
+        "phpmd/phpmd": "^2.9",
+        "phpstan/phpstan": "^0.12.80",
+        "phpunit/phpunit": "^9.5",
+        "sebastian/phpcpd": "^6.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "bin": [
+        "bin/license-check"
+    ]
+}

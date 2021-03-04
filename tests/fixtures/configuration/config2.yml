@@ -1,0 +1,7 @@
+allowed-licenses:
+  - MIT
+  - Apache-2.0
+
+allowed-packages:
+  composer:
+    - vendorB/package1

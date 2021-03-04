@@ -1,0 +1,22 @@
+{
+    "packages": [
+        {
+            "name": "vendorC/package1",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "vendorC/package2",
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "name": "vendorD/package1",
+            "license": [
+                "AGPL-3.0-only"
+            ]
+        }
+    ]
+}

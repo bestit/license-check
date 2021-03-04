@@ -1,0 +1,27 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  BestIt\LicenseCheck\:
+    resource: '../../src/*'
+
+  _instanceof:
+    BestIt\LicenseCheck\LicenseLoader\LicenseLoaderInterface:
+      tags: [ 'app.license_loader' ]
+
+  Finder:
+    class: Symfony\Component\Finder\Finder
+
+  BestIt\LicenseCheck\LicenseLoader\ComposerLicenseLoader:
+    arguments:
+      - '@Finder'
+
+  BestIt\LicenseCheck\Checker:
+    arguments:
+      - !tagged_iterator app.license_loader
+
+  BestIt\LicenseCheck\Application:
+    public: true
+    arguments:
+      - '@BestIt\LicenseCheck\Command\LicenseCheckCommand'

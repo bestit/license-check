@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types = 1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use BestIt\LicenseCheck\Application;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+// Load service container an start application.
+$containerBuilder = new ContainerBuilder();
+$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../Resources/config'));
+$loader->load('services.yml');
+$containerBuilder->compile();
+$containerBuilder->get(Application::class)->run();

@@ -1,0 +1,8 @@
+allowed-licenses:
+  - MIT
+
+allowed-packages:
+  Name1:
+    - vendorA/package2
+  Name2:
+    - vendorE/package1

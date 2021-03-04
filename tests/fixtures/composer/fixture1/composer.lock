@@ -1,0 +1,22 @@
+{
+  "packages": [
+    {
+      "name": "vendorA/package1",
+      "license": [
+        "MIT"
+      ]
+    },
+    {
+      "name": "vendorA/package2",
+      "license": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "name": "vendorB/package1",
+      "license": [
+        "BSD"
+      ]
+    }
+  ]
+}
