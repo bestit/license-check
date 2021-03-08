@@ -20,10 +20,13 @@ allowed-licenses:
 
 allowed-packages:
   composer:
-    - best-it/license-check
+    - /best-it\/license-check/
+    - /best-it\/.*/
   npm:
-    - test/test
+    - /test\/test/
 ```
+
+The allowed packages must be defined as a regular expression.
 
 Execute the following command to get a report which includes the information that everything is compatible or that
 some dependencies are not compatible with your configuration. In case of problems the error code is 1.

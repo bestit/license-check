@@ -47,7 +47,7 @@ class Checker
             $type = $loader->getName();
             $allowedPackages = $configuration->getAllowedPackages($type);
             foreach ($loader->getLicenses($path) as $package => $licenses) {
-                if (!in_array($package, $allowedPackages)) {
+                if (!$this->isPackageAllowed($package, $allowedPackages)) {
                     if (count($licenses) === 0) {
                         $result->addViolation(
                             sprintf(
@@ -75,5 +75,26 @@ class Checker
         }
 
         return $result;
+    }
+
+    /**
+     * Check if the given package is allowed.
+     *
+     * @param string $package
+     * @param string[] $allowedPackages
+     * @return bool
+     */
+    private function isPackageAllowed(string $package, array $allowedPackages): bool
+    {
+        $allowed = false;
+
+        foreach ($allowedPackages as $allowedPackage) {
+            if (preg_match($allowedPackage, $package) === 1) {
+                $allowed = true;
+                break;
+            }
+        }
+
+        return $allowed;
     }
 }

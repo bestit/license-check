@@ -4,4 +4,4 @@ allowed-licenses:
 
 allowed-packages:
   composer:
-    - vendorB/package1
+    - /vendorB\/package1/

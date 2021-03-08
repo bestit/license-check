@@ -3,6 +3,6 @@ allowed-licenses:
 
 allowed-packages:
   Name1:
-    - vendorA/package2
+    - /vendorA\/package2/
   Name2:
-    - vendorE/package1
+    - /vendorE\/package1/
