@@ -17,6 +17,13 @@
       "license": [
         "BSD"
       ]
+    },
+    {
+      "name": "vendorB/package2",
+      "license": [
+        "BSD",
+        "MIT"
+      ]
     }
   ]
 }

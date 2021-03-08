@@ -58,17 +58,23 @@ class Checker
                         );
                     }
 
+                    $hasValidLicense = false;
                     foreach ($licenses as $license) {
-                        if (!in_array($license, $allowedLicenses)) {
-                            $result->addViolation(
-                                sprintf(
-                                    'License (%s) of %s package %s is not allowed.',
-                                    $license,
-                                    $type,
-                                    $package,
-                                ),
-                            );
+                        if (in_array($license, $allowedLicenses)) {
+                            $hasValidLicense = true;
+                            break;
                         }
+                    }
+
+                    if (!$hasValidLicense) {
+                        $result->addViolation(
+                            sprintf(
+                                'License (%s) of %s package %s is not allowed.',
+                                implode(', ', $licenses),
+                                $type,
+                                $package,
+                            ),
+                        );
                     }
                 }
             }

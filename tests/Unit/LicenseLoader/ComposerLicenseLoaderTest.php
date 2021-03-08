@@ -86,6 +86,7 @@ class ComposerLicenseLoaderTest extends TestCase
                 'vendorA/package1' => ['MIT'],
                 'vendorA/package2' => ['Apache-2.0'],
                 'vendorB/package1' => ['BSD'],
+                'vendorB/package2' => ['BSD', 'MIT'],
                 'vendorC/package1' => ['MIT'],
                 'vendorC/package2' => ['Apache-2.0'],
                 'vendorD/package1' => ['AGPL-3.0-only'],
