@@ -1,0 +1,7 @@
+allowed-licenses:
+  - MIT
+  - Apache-2.0
+  - ISC
+  - BSD
+
+allowed-packages:

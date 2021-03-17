@@ -32,6 +32,26 @@ class IntegrationTest extends TestCase
                 __DIR__ . '/../fixtures/composer/fixture1/',
                 true,
             ],
+            [
+                __DIR__ . '/../fixtures/configuration/config3.yml',
+                __DIR__ . '/../fixtures/node/fixture1/',
+                true,
+            ],
+            [
+                __DIR__ . '/../fixtures/configuration/config4.yml',
+                __DIR__ . '/../fixtures/node/fixture1/',
+                true,
+            ],
+            [
+                __DIR__ . '/../fixtures/configuration/config3.yml',
+                __DIR__ . '/../fixtures/node/fixture2/',
+                false,
+            ],
+            [
+                __DIR__ . '/../fixtures/configuration/config4.yml',
+                __DIR__ . '/../fixtures/node/fixture2/',
+                true,
+            ],
         ];
     }
 

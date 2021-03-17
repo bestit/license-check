@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "devDependencies": {
+    "d": "^3.19.0"
+  },
+  "dependencies": {
+    "e": "^2.2.0",
+    "f": "^4.2.2"
+  }
+}

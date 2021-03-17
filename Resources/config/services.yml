@@ -12,8 +12,13 @@ services:
 
   Finder:
     class: Symfony\Component\Finder\Finder
+    shared: false
 
   BestIt\LicenseCheck\LicenseLoader\ComposerLicenseLoader:
+    arguments:
+      - '@Finder'
+
+  BestIt\LicenseCheck\LicenseLoader\NodeLicenseLoader:
     arguments:
       - '@Finder'
 

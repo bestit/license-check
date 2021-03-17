@@ -56,6 +56,8 @@ class Checker
                                 $package,
                             ),
                         );
+
+                        continue;
                     }
 
                     $hasValidLicense = false;

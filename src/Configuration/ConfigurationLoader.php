@@ -100,8 +100,6 @@ class ConfigurationLoader
 
             $allowedLicences = $this->getAllowedLicenses($yaml[self::KEY_ALLOWED_LICENSES] ?? []);
 
-            assert(array_key_exists(self::KEY_ALLOWED_PACKAGES, $yaml));
-            assert(is_array($yaml[self::KEY_ALLOWED_PACKAGES]));
             $allowedPackages = $this->getAllowedPackages($yaml[self::KEY_ALLOWED_PACKAGES] ?? []);
 
             $configuration = new Configuration(
