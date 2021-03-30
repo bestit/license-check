@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function defined;
 
 /**
  * Command to check package licenses.
@@ -130,13 +131,13 @@ class LicenseCheckCommand extends Command
 
         $resultSet = $this->checker->validate($configuration, $workingDirectory);
 
-        $resultCode = self::SUCCESS;
+        $resultCode = defined('static::SUCCESS') ? static::SUCCESS : 0;
 
         if ($resultSet->isPassed()) {
             $output->writeln('<info>License check passed!</info>');
         } else {
             if (!$input->getOption(self::OPTION_IGNORE_ERRORS)) {
-                $resultCode = self::FAILURE;
+                $resultCode = defined('static::FAILURE') ? static::FAILURE : 1;
             }
 
             foreach ($resultSet->getViolations() as $violation) {
