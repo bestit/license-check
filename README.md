@@ -8,7 +8,7 @@ This tool can be used to check the licenses of the used packages.
 
 Our package can be installed with composer with the following command:
 ```bash
-composer require best-it/license-check
+composer require best-it/license-check --prefer-dist
 ```
 
 ## Usage
