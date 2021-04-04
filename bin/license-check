@@ -1,13 +1,27 @@
 #!/usr/bin/env php
 <?php
-declare(strict_types = 1);
 
-require __DIR__ . '/../vendor/autoload.php';
+declare(strict_types=1);
 
 use BestIt\LicenseCheck\Application;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+$autoloaders = [
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/vendor/autoload.php'
+];
+
+foreach ($autoloaders as $file) {
+    if (file_exists($file)) {
+        require $file;
+
+        break;
+    }
+}
 
 // Load service container an start application.
 $containerBuilder = new ContainerBuilder();
