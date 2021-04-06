@@ -42,9 +42,16 @@ class LicenseLoaderInterfaceTest extends TestCase
         $reflection = new ReflectionObject($this->fixture);
 
         self::assertTrue($reflection->hasMethod('getLicenses'));
+
         self::assertArrayHasKey('0', $reflection->getMethod('getLicenses')->getParameters());
         self::assertEquals('path', $reflection->getMethod('getLicenses')->getParameters()[0]->getName());
         self::assertEquals('string', (string) $reflection->getMethod('getLicenses')->getParameters()[0]->getType());
+        self::assertEquals('array', (string) $reflection->getMethod('getLicenses')->getReturnType());
+
+        self::assertArrayHasKey('1', $reflection->getMethod('getLicenses')->getParameters());
+        self::assertEquals('depth', $reflection->getMethod('getLicenses')->getParameters()[1]->getName());
+        self::assertEquals('?int', (string) $reflection->getMethod('getLicenses')->getParameters()[1]->getType());
+
         self::assertEquals('array', (string) $reflection->getMethod('getLicenses')->getReturnType());
 
         self::assertTrue($reflection->hasMethod('getName'));

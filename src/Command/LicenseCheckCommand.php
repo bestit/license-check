@@ -39,6 +39,13 @@ class LicenseCheckCommand extends Command
     private const OPTION_CONFIGURATION = 'configuration';
 
     /**
+     * Constant for the depth cli option.
+     *
+     * @var string OPTION_IGNORE_ERRORS
+     */
+    private const OPTION_DEPTH = 'depth';
+
+    /**
      * Constant for the ignore-errors cli option.
      *
      * @var string OPTION_IGNORE_ERRORS
@@ -98,6 +105,12 @@ class LicenseCheckCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Don\'t return an error code.',
+            )
+            ->addOption(
+                self::OPTION_DEPTH,
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Set the maximum depth of the directory iterators.',
             );
     }
 
@@ -129,7 +142,12 @@ class LicenseCheckCommand extends Command
         assert(is_string($configurationPath));
         $configuration = $this->configurationLoader->load($configurationPath);
 
-        $resultSet = $this->checker->validate($configuration, $workingDirectory);
+        if (($depth = $input->getOption(self::OPTION_DEPTH)) !== null) {
+            assert(is_string($depth));
+            $depth = (int) $depth;
+        }
+
+        $resultSet = $this->checker->validate($configuration, $workingDirectory, $depth);
 
         $resultCode = defined('static::SUCCESS') ? static::SUCCESS : 0;
 

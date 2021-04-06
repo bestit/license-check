@@ -57,6 +57,7 @@ class CommandExceptionTest extends TestCase
                 getcwd(),
                 getcwd() . '/license-check.yml',
                 [],
+                null,
             ],
             // Actual working directory. Errors not ignores. No custom config. Result has violations.
             [
@@ -65,6 +66,7 @@ class CommandExceptionTest extends TestCase
                 getcwd(),
                 getcwd() . '/license-check.yml',
                 ['VIOLATION'],
+                null,
             ],
             // Actual working directory. Errors are ignores. No custom config. Result has violations.
             [
@@ -75,6 +77,7 @@ class CommandExceptionTest extends TestCase
                 getcwd(),
                 getcwd() . '/license-check.yml',
                 ['VIOLATION'],
+                null,
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has no violations.
             [
@@ -85,6 +88,7 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/test-directory/license-check.yml',
                 [],
+                null,
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has violations.
             [
@@ -95,6 +99,7 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/test-directory/license-check.yml',
                 ['VIOLATION'],
+                null,
             ],
             // Custom working directory. Errors are ignores. No custom config. Result has violations.
             [
@@ -106,6 +111,7 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/test-directory/license-check.yml',
                 ['VIOLATION'],
+                null,
             ],
             // Custom working directory. Errors not ignores. Custom config. Result has no violations.
             [
@@ -117,6 +123,7 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/testconfig.yml',
                 [],
+                null,
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has violations.
             [
@@ -128,6 +135,7 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/testconfig.yml',
                 ['VIOLATION'],
+                null,
             ],
             // Custom working directory. Errors are ignores. No custom config. Result has violations.
             [
@@ -140,6 +148,21 @@ class CommandExceptionTest extends TestCase
                 '/test-directory',
                 '/testconfig.yml',
                 ['VIOLATION'],
+                null,
+            ],
+            // Custom working directory. Errors are ignores. No custom config. Result has violations. Optional depth
+            [
+                [
+                    'directory' => '/test-directory',
+                    '--ignore-errors' => true,
+                    '--configuration' => '/testconfig.yml',
+                    '--depth' => '10',
+                ],
+                0,
+                '/test-directory',
+                '/testconfig.yml',
+                ['VIOLATION'],
+                10,
             ],
         ];
     }
@@ -175,6 +198,9 @@ class CommandExceptionTest extends TestCase
         self::assertTrue($this->fixture->getDefinition()->hasOption('ignore-errors'));
         self::assertFalse($this->fixture->getDefinition()->getOption('ignore-errors')->isValueOptional());
         self::assertFalse($this->fixture->getDefinition()->getOption('ignore-errors')->isValueRequired());
+
+        self::assertTrue($this->fixture->getDefinition()->hasOption('depth'));
+        self::assertFalse($this->fixture->getDefinition()->getOption('depth')->isValueOptional());
     }
 
     /**
@@ -187,6 +213,7 @@ class CommandExceptionTest extends TestCase
      * @param string $directory
      * @param string $configPath
      * @param string[] $violations
+     * @param int|null $depth
      *
      * @return void
      */
@@ -196,6 +223,7 @@ class CommandExceptionTest extends TestCase
         string $directory,
         string $configPath,
         array $violations,
+        ?int $depth,
     ): void {
         $this
             ->configurationLoader
@@ -212,7 +240,7 @@ class CommandExceptionTest extends TestCase
         $this
             ->checker
             ->method('validate')
-            ->with($configuration, $directory)
+            ->with($configuration, $directory, $depth)
             ->willReturn($resultSet);
 
         $commandTester = new CommandTester($this->fixture);

@@ -31,14 +31,37 @@ class Checker
     }
 
     /**
+     * Check if the given package is allowed.
+     *
+     * @param string $package
+     * @param string[] $allowedPackages
+     *
+     * @return bool
+     */
+    private function isPackageAllowed(string $package, array $allowedPackages): bool
+    {
+        $allowed = false;
+
+        foreach ($allowedPackages as $allowedPackage) {
+            if (preg_match($allowedPackage, $package) === 1) {
+                $allowed = true;
+                break;
+            }
+        }
+
+        return $allowed;
+    }
+
+    /**
      * Start the validation.
      *
      * @param Configuration $configuration
      * @param string $path
+     * @param int|null $depth
      *
      * @return Result
      */
-    public function validate(Configuration $configuration, string $path): Result
+    public function validate(Configuration $configuration, string $path, ?int $depth = null): Result
     {
         $result = new Result();
 
@@ -46,7 +69,7 @@ class Checker
         foreach ($this->loaders as $loader) {
             $type = $loader->getName();
             $allowedPackages = $configuration->getAllowedPackages($type);
-            foreach ($loader->getLicenses($path) as $package => $licenses) {
+            foreach ($loader->getLicenses($path, $depth) as $package => $licenses) {
                 if (!$this->isPackageAllowed($package, $allowedPackages)) {
                     if (count($licenses) === 0) {
                         $result->addViolation(
@@ -83,27 +106,5 @@ class Checker
         }
 
         return $result;
-    }
-
-    /**
-     * Check if the given package is allowed.
-     *
-     * @param string $package
-     * @param string[] $allowedPackages
-     *
-     * @return bool
-     */
-    private function isPackageAllowed(string $package, array $allowedPackages): bool
-    {
-        $allowed = false;
-
-        foreach ($allowedPackages as $allowedPackage) {
-            if (preg_match($allowedPackage, $package) === 1) {
-                $allowed = true;
-                break;
-            }
-        }
-
-        return $allowed;
     }
 }

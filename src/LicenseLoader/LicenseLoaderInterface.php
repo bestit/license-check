@@ -15,11 +15,12 @@ interface LicenseLoaderInterface
     /**
      * Get used licenses in the specified path.
      *
-     * @param string $path
+     * @param string $path Search path.
+     * @param int|null $depth (Optional) Search depth.
      *
      * @return array<array<string>>
      */
-    public function getLicenses(string $path): array;
+    public function getLicenses(string $path, ?int $depth = null): array;
 
     /**
      * Get name of the license loader.
