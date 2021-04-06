@@ -195,7 +195,7 @@ class CommandExceptionTest extends TestCase
         int $resultCode,
         string $directory,
         string $configPath,
-        array $violations
+        array $violations,
     ): void {
         $this
             ->configurationLoader

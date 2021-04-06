@@ -30,7 +30,7 @@ class ComposerLicenseLoaderTest extends TestCase
     /**
      * @var MockObject|Finder
      */
-    private MockObject | Finder $finder;
+    private MockObject|Finder $finder;
 
     /**
      * Set up the test.

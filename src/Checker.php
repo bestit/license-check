@@ -90,6 +90,7 @@ class Checker
      *
      * @param string $package
      * @param string[] $allowedPackages
+     *
      * @return bool
      */
     private function isPackageAllowed(string $package, array $allowedPackages): bool

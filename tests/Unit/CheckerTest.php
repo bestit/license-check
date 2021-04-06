@@ -30,14 +30,14 @@ class CheckerTest extends TestCase
      *
      * @var MockObject|LicenseLoaderInterface $loader1
      */
-    private $loader1;
+    private MockObject|LicenseLoaderInterface $loader1;
 
     /**
      * Dummy loader 2.
      *
      * @var MockObject|LicenseLoaderInterface $loader2
      */
-    private $loader2;
+    private MockObject|LicenseLoaderInterface $loader2;
 
     /**
      * Set up the test.

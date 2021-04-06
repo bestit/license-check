@@ -1,5 +1,18 @@
 {
     "name": "best-it/license-check",
+    "prefer-stable": true,
+    "scripts": {
+        "fix": [
+            "phpcbf"
+        ],
+        "low-level-tests": [
+            "phpcs --ignore=\"**.js\" --runtime-set ignore_warnings_on_exit 1",
+            "phpmd src,tests text ./phpmd.xml.dist",
+            "phpcpd src tests",
+            "phpstan analyse --memory-limit=2G",
+            "phpunit"
+        ]
+    },
     "description": "Tool to check licenses of used packages.",
     "type": "project",
     "license": "MIT",
@@ -9,7 +22,7 @@
             "email": "info@bestit.de"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "BestIt\\LicenseCheck\\": "src"
@@ -29,7 +42,7 @@
         "symfony/yaml": "^4.4 || ^5.2"
     },
     "require-dev": {
-        "best-it/php_codesniffer": "^3.4",
+        "best-it/php_codesniffer": "dev-release/4.0.0",
         "phpmd/phpmd": "^2.9",
         "phpstan/phpstan": "^0.12.80",
         "phpunit/phpunit": "^9.5",
