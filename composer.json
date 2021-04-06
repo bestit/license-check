@@ -5,6 +5,10 @@
         "fix": [
             "phpcbf"
         ],
+        "high-level-tests": [
+            "@low-level-tests",
+            "infection --only-covered -s --no-progress --no-ansi --no-interaction --min-msi=75 --min-covered-msi=75"
+        ],
         "low-level-tests": [
             "phpcs --ignore=\"**.js\" --runtime-set ignore_warnings_on_exit 1",
             "phpmd src,tests text ./phpmd.xml.dist",
@@ -35,6 +39,7 @@
     },
     "require": {
         "php": "^8.0",
+        "ext-json": "*",
         "symfony/config": "^4.4 || ^5.2",
         "symfony/console": "^4.4 || ^5.2",
         "symfony/dependency-injection": "^4.4 || ^5.2",
@@ -43,6 +48,7 @@
     },
     "require-dev": {
         "best-it/php_codesniffer": "dev-release/4.0.0",
+        "infection/infection": "^0.21",
         "phpmd/phpmd": "^2.9",
         "phpstan/phpstan": "^0.12.80",
         "phpunit/phpunit": "^9.5",

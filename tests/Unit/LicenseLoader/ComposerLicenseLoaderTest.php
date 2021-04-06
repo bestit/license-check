@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace BestIt\LicenseCheck\LicenseLoader;
 
-use ArrayIterator;
 use BestIt\LicenseCheck\LicenseLoader\Exception\LicenseLoaderException;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Finder\Finder;
+use BestIt\LicenseCheck\Unit\LicenseLoader\LicenseLoaderTestCase;
 use Symfony\Component\Finder\SplFileInfo;
 use function file_get_contents;
 
@@ -18,31 +15,11 @@ use function file_get_contents;
  * @author best it AG <info@bestit.de>
  * @package BestIt\LicenseCheck\LicenseLoader
  */
-class ComposerLicenseLoaderTest extends TestCase
+class ComposerLicenseLoaderTest extends LicenseLoaderTestCase
 {
-    /**
-     * The test fixture.
-     *
-     * @var ComposerLicenseLoader $fixture
-     */
-    private ComposerLicenseLoader $fixture;
+    protected const TEST_CLASS = ComposerLicenseLoader::class;
 
-    /**
-     * @var MockObject|Finder
-     */
-    private MockObject|Finder $finder;
-
-    /**
-     * Set up the test.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->fixture = new ComposerLicenseLoader(
-            $this->finder = $this->createMock(Finder::class),
-        );
-    }
+    protected const USED_FILE_PATTERN = 'composer.lock';
 
     /**
      * Test to get licenses.
@@ -51,35 +28,28 @@ class ComposerLicenseLoaderTest extends TestCase
      */
     public function testGetLicenses(): void
     {
-        $this
-            ->finder
-            ->method('name')
-            ->with('composer.lock')
-            ->willReturnSelf();
-
-        $this
-            ->finder
-            ->method('in')
-            ->with($path = '/directory')
-            ->willReturnSelf();
-
-        $iterator = new ArrayIterator([
+        $files = [
             $file1 = $this->createMock(SplFileInfo::class),
             $file2 = $this->createMock(SplFileInfo::class),
-        ]);
+        ];
 
-        $this
-            ->finder
-            ->method('getIterator')
-            ->willReturn($iterator);
+        $this->mockFileIterator($files, $path = '/directory');
 
         $file1
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/../../fixtures/composer/fixture1/composer.lock'));
 
+        $file1
+            ->method('isReadable')
+            ->willReturn(true);
+
         $file2
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/../../fixtures/composer/fixture2/composer.lock'));
+
+        $file2
+            ->method('isReadable')
+            ->willReturn(true);
 
         self::assertEquals(
             [
@@ -91,7 +61,7 @@ class ComposerLicenseLoaderTest extends TestCase
                 'vendorC/package2' => ['Apache-2.0'],
                 'vendorD/package1' => ['AGPL-3.0-only'],
             ],
-            $this->fixture->getLicenses($path),
+            $this->testedObject->getLicenses($path),
         );
     }
 
@@ -102,77 +72,28 @@ class ComposerLicenseLoaderTest extends TestCase
      */
     public function testGetLicensesWithEmptyFile(): void
     {
-        $this
-            ->finder
-            ->method('name')
-            ->with('composer.lock')
-            ->willReturnSelf();
+        $files = [
+            $file = $this->createMock(SplFileInfo::class),
+        ];
 
-        $this
-            ->finder
-            ->method('in')
-            ->with($path = '/directory')
-            ->willReturnSelf();
-
-        $this
-            ->finder
-            ->method('getIterator')
-            ->willReturn(new ArrayIterator([
-                $file = $this->createMock(SplFileInfo::class),
-            ]));
-
-        $file
-            ->method('getPathname')
-            ->willReturn('PATH');
+        $this->mockFileIterator($files, $path = '/directory');
 
         $file
             ->method('getContents')
             ->willReturn('');
 
-        $this->expectException(LicenseLoaderException::class);
-        $this->expectExceptionMessage(sprintf('Cannot decode content of file PATH'));
-
-        $this->fixture->getLicenses($path);
-    }
-
-    /**
-     * Test to get licenses.
-     *
-     * @return void
-     */
-    public function testGetLicensesWithInaccessibleFile(): void
-    {
-        $this
-            ->finder
-            ->method('name')
-            ->with('composer.lock')
-            ->willReturnSelf();
-
-        $this
-            ->finder
-            ->method('in')
-            ->with($path = '/directory')
-            ->willReturnSelf();
-
-        $this
-            ->finder
-            ->method('getIterator')
-            ->willReturn(new ArrayIterator([
-                $file = $this->createMock(SplFileInfo::class),
-            ]));
-
         $file
             ->method('getPathname')
             ->willReturn('PATH');
 
         $file
-            ->method('getContents')
-            ->willReturn(false);
+            ->method('isReadable')
+            ->willReturn(true);
 
         $this->expectException(LicenseLoaderException::class);
-        $this->expectExceptionMessage(sprintf('Cannot read content of file PATH'));
+        $this->expectExceptionMessage(sprintf('Cannot decode content of file PATH'));
 
-        $this->fixture->getLicenses($path);
+        $this->testedObject->getLicenses($path);
     }
 
     /**
@@ -182,16 +103,6 @@ class ComposerLicenseLoaderTest extends TestCase
      */
     public function testGetName(): void
     {
-        self::assertEquals('composer', $this->fixture->getName());
-    }
-
-    /**
-     * Test that loader returns the correct name.
-     *
-     * @return void
-     */
-    public function testInheritance(): void
-    {
-        self::assertInstanceOf(LicenseLoaderInterface::class, $this->fixture);
+        self::assertEquals('composer', $this->testedObject->getName());
     }
 }

@@ -6,9 +6,7 @@ namespace BestIt\LicenseCheck\LicenseLoader;
 
 use ArrayIterator;
 use BestIt\LicenseCheck\LicenseLoader\Exception\LicenseLoaderException;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Finder\Finder;
+use BestIt\LicenseCheck\Unit\LicenseLoader\LicenseLoaderTestCase;
 use Symfony\Component\Finder\SplFileInfo;
 use function file_get_contents;
 
@@ -18,31 +16,11 @@ use function file_get_contents;
  * @author best it AG <info@bestit.de>
  * @package BestIt\LicenseCheck\LicenseLoader
  */
-class NodeLicenseLoaderTest extends TestCase
+class NodeLicenseLoaderTest extends LicenseLoaderTestCase
 {
-    /**
-     * The test fixture.
-     *
-     * @var NodeLicenseLoader $fixture
-     */
-    private NodeLicenseLoader $fixture;
+    protected const TEST_CLASS = NodeLicenseLoader::class;
 
-    /**
-     * @var MockObject|Finder
-     */
-    private MockObject | Finder $finder;
-
-    /**
-     * Set up the test.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->fixture = new NodeLicenseLoader(
-            $this->finder = $this->createMock(Finder::class),
-        );
-    }
+    protected const USED_FILE_PATTERN = '/node_modules\/([A-Za-z0-9]|-|_)*\/package.json/';
 
     /**
      * Test to get licenses.
@@ -52,13 +30,13 @@ class NodeLicenseLoaderTest extends TestCase
     public function testGetLicenses(): void
     {
         $this
-            ->finder
+            ->finderMock
             ->method('path')
             ->with('/node_modules\/([A-Za-z0-9]|-|_)*\/package.json/')
             ->willReturnSelf();
 
         $this
-            ->finder
+            ->finderMock
             ->method('in')
             ->with($path = '/directory')
             ->willReturnSelf();
@@ -70,7 +48,7 @@ class NodeLicenseLoaderTest extends TestCase
         ]);
 
         $this
-            ->finder
+            ->finderMock
             ->method('getIterator')
             ->willReturn($iterator);
 
@@ -78,13 +56,25 @@ class NodeLicenseLoaderTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/../../fixtures/node/fixture1/node_modules/a/package.json'));
 
+        $file1
+            ->method('isReadable')
+            ->willReturn(true);
+
         $file2
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/../../fixtures/node/fixture1/node_modules/b/package.json'));
 
+        $file2
+            ->method('isReadable')
+            ->willReturn(true);
+
         $file3
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/../../fixtures/node/fixture1/node_modules/c/package.json'));
+
+        $file3
+            ->method('isReadable')
+            ->willReturn(true);
 
         self::assertEquals(
             [
@@ -92,7 +82,7 @@ class NodeLicenseLoaderTest extends TestCase
                 'b' => ['MIT'],
                 'c' => ['BSD'],
             ],
-            $this->fixture->getLicenses($path),
+            $this->testedObject->getLicenses($path),
         );
     }
 
@@ -104,19 +94,19 @@ class NodeLicenseLoaderTest extends TestCase
     public function testGetLicensesWithEmptyFile(): void
     {
         $this
-            ->finder
+            ->finderMock
             ->method('path')
             ->with('/node_modules\/([A-Za-z0-9]|-|_)*\/package.json/')
             ->willReturnSelf();
 
         $this
-            ->finder
+            ->finderMock
             ->method('in')
             ->with($path = '/directory')
             ->willReturnSelf();
 
         $this
-            ->finder
+            ->finderMock
             ->method('getIterator')
             ->willReturn(new ArrayIterator([
                 $file = $this->createMock(SplFileInfo::class),
@@ -130,10 +120,14 @@ class NodeLicenseLoaderTest extends TestCase
             ->method('getContents')
             ->willReturn('');
 
+        $file
+            ->method('isReadable')
+            ->willReturn(true);
+
         $this->expectException(LicenseLoaderException::class);
         $this->expectExceptionMessage(sprintf('Cannot decode content of file PATH'));
 
-        $this->fixture->getLicenses($path);
+        $this->testedObject->getLicenses($path);
     }
 
     /**
@@ -144,19 +138,19 @@ class NodeLicenseLoaderTest extends TestCase
     public function testGetLicensesWithInaccessibleFile(): void
     {
         $this
-            ->finder
+            ->finderMock
             ->method('path')
             ->with('/node_modules\/([A-Za-z0-9]|-|_)*\/package.json/')
             ->willReturnSelf();
 
         $this
-            ->finder
+            ->finderMock
             ->method('in')
             ->with($path = '/directory')
             ->willReturnSelf();
 
         $this
-            ->finder
+            ->finderMock
             ->method('getIterator')
             ->willReturn(new ArrayIterator([
                 $file = $this->createMock(SplFileInfo::class),
@@ -167,13 +161,13 @@ class NodeLicenseLoaderTest extends TestCase
             ->willReturn('PATH');
 
         $file
-            ->method('getContents')
+            ->method('isReadable')
             ->willReturn(false);
 
         $this->expectException(LicenseLoaderException::class);
         $this->expectExceptionMessage(sprintf('Cannot read content of file PATH'));
 
-        $this->fixture->getLicenses($path);
+        $this->testedObject->getLicenses($path);
     }
 
     /**
@@ -183,16 +177,6 @@ class NodeLicenseLoaderTest extends TestCase
      */
     public function testGetName(): void
     {
-        self::assertEquals('node', $this->fixture->getName());
-    }
-
-    /**
-     * Test that loader returns the correct name.
-     *
-     * @return void
-     */
-    public function testInheritance(): void
-    {
-        self::assertInstanceOf(LicenseLoaderInterface::class, $this->fixture);
+        self::assertEquals('node', $this->testedObject->getName());
     }
 }

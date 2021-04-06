@@ -1,0 +1,11 @@
+{
+    "source": {
+        "directories": [
+            "bin",
+            "src"
+        ]
+    },
+    "mutators": {
+        "@default": true
+    }
+}
