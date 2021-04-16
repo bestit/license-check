@@ -108,7 +108,7 @@ class CheckerTest extends TestCase
                 ],
             ]);
 
-        $configuration = (new ConfigurationLoader())->load(__DIR__ . '/../fixtures/configuration/config1.yml');
+        $configuration = (new ConfigurationLoader())->load([__DIR__ . '/../fixtures/configuration/config1.yml']);
 
         $result = $this->fixture->validate($configuration, $path);
 

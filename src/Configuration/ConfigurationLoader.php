@@ -82,14 +82,46 @@ class ConfigurationLoader
     /**
      * Create a configuration object from a file.
      *
-     * @param string $fileName Path to configuration file.
+     * @param array $configFiles Array of configuration files with path.
      *
      * @throws ConfigurationNotFoundException Exception if configuration file was not found.
      * @throws ConfigurationParseException Exception if configuration cannot be parsed.
      *
      * @return Configuration
      */
-    public function load(string $fileName): Configuration
+    public function load(array $configFiles): Configuration
+    {
+        $configArrays = [];
+        foreach ($configFiles as $configFile) {
+            $configArrays[] = $this->parseConfigFile($configFile);
+        }
+
+        $mergedConfig = [
+            'allowed_licenses' => [],
+            'allowed_packages' => [],
+        ];
+
+        foreach ($configArrays as $configArray) {
+            $mergedConfig = array_merge_recursive($mergedConfig, $configArray);
+        }
+
+        return new Configuration(
+            $mergedConfig['allowed_licenses'],
+            $mergedConfig['allowed_packages'],
+        );
+    }
+
+    /**
+     * Reads a single config file and returns the config as array.
+     *
+     * @param string $fileName Path to config file.
+     *
+     * @throws ConfigurationNotFoundException Exception if configuration file was not found.
+     * @throws ConfigurationParseException Exception if configuration cannot be parsed.
+     *
+     * @return array
+     */
+    private function parseConfigFile(string $fileName): array
     {
         if (!file_exists($fileName)) {
             throw new ConfigurationNotFoundException(sprintf('Configuration file %s not found.', $fileName));
@@ -99,17 +131,11 @@ class ConfigurationLoader
             $yaml = Yaml::parseFile($fileName);
 
             $allowedLicences = $this->getAllowedLicenses($yaml[self::KEY_ALLOWED_LICENSES] ?? []);
-
             $allowedPackages = $this->getAllowedPackages($yaml[self::KEY_ALLOWED_PACKAGES] ?? []);
-
-            $configuration = new Configuration(
-                $allowedLicences,
-                $allowedPackages,
-            );
         } catch (Throwable $e) {
             throw new ConfigurationParseException('Configuration file cannot be parsed.', 0, $e);
         }
 
-        return $configuration;
+        return ['allowed_licenses' => $allowedLicences, 'allowed_packages' => $allowedPackages];
     }
 }
