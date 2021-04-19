@@ -13,7 +13,7 @@ composer require best-it/license-check --dev --prefer-dist
 
 ## Usage
 
-Create a YAML configuration ([license-check.yml](license-check.yml)) like this:
+Create one or more YAML configuration files ([license-check.yml](license-check.yml)) like this:
 ```yaml
 allowed-licenses:
   - MIT
@@ -27,6 +27,8 @@ allowed-packages:
 ```
 
 The allowed packages must be defined as a regular expression.
+
+If multiple files are passed as an argument they will be merged to a single configuration.
 
 Execute the following command to get a report which includes the information that everything is compatible or that
 some dependencies are not compatible with your configuration. In case of problems the error code is 1.

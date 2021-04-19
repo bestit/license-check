@@ -1237,12 +1237,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bestit/PHP_CodeSniffer.git",
-                "reference": "d3d7a673481f55592768d691d0fb2294617617b8"
+                "reference": "31b633b717f567aea46ef4381938e77b3d6b6fad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bestit/PHP_CodeSniffer/zipball/d3d7a673481f55592768d691d0fb2294617617b8",
-                "reference": "d3d7a673481f55592768d691d0fb2294617617b8",
+                "url": "https://api.github.com/repos/bestit/PHP_CodeSniffer/zipball/31b633b717f567aea46ef4381938e77b3d6b6fad",
+                "reference": "31b633b717f567aea46ef4381938e77b3d6b6fad",
                 "shasum": ""
             },
             "require": {
@@ -1250,6 +1250,9 @@
                 "slevomat/coding-standard": "dev-master#47cf967b284f7ff41ab500ae55cdbcee986b1534"
             },
             "require-dev": {
+                "best-it/license-check": "^0.1.0",
+                "infection/infection": "^0.21.5",
+                "pdepend/pdepend": "2.8.*",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phploc/phploc": "^7.0.2",
                 "phpmd/phpmd": "^2.6",
@@ -1284,7 +1287,7 @@
                 "issues": "https://github.com/bestit/PHP_CodeSniffer/issues",
                 "source": "https://github.com/bestit/PHP_CodeSniffer/tree/release/4.0.0"
             },
-            "time": "2021-02-26T06:46:48+00:00"
+            "time": "2021-04-07T11:33:28+00:00"
         },
         {
             "name": "composer/xdebug-handler",

@@ -90,8 +90,8 @@ class LicenseCheckCommand extends Command
             ->addOption(
                 self::OPTION_CONFIGURATION,
                 'c',
-                InputOption::VALUE_REQUIRED,
-                'Path to configuration file.',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'List of configuration files.',
             )
             ->addOption(
                 self::OPTION_IGNORE_ERRORS,
@@ -109,6 +109,7 @@ class LicenseCheckCommand extends Command
      *
      * @throws ConfigurationNotFoundException Exception if configuration is not found.
      * @throws ConfigurationParseException Exception if configuration cannot be parsed.
+     * @throws CommandException Thrown if directory is not readable
      *
      * @return int
      */
@@ -122,12 +123,14 @@ class LicenseCheckCommand extends Command
             throw new CommandException('Cannot read working directory.');
         }
 
-        if (!is_string($configurationPath = $input->getOption(self::OPTION_CONFIGURATION))) {
-            $configurationPath = $workingDirectory . '/license-check.yml';
+        $configFiles = $input->getOption(self::OPTION_CONFIGURATION);
+
+        assert(is_array($configFiles));
+        if (count($configFiles) === 0) {
+            $configFiles[] = $workingDirectory . '/license-check.yml';
         }
 
-        assert(is_string($configurationPath));
-        $configuration = $this->configurationLoader->load($configurationPath);
+        $configuration = $this->configurationLoader->load($configFiles);
 
         $resultSet = $this->checker->validate($configuration, $workingDirectory);
 

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @author best it AG <info@bestit.de>
  * @package BestIt\LicenseCheck\Command
  */
-class CommandExceptionTest extends TestCase
+class LicenseCheckCommandTest extends TestCase
 {
     /**
      * The test fixture.
@@ -55,7 +55,7 @@ class CommandExceptionTest extends TestCase
                 [],
                 0,
                 getcwd(),
-                getcwd() . '/license-check.yml',
+                [getcwd() . '/license-check.yml'],
                 [],
             ],
             // Actual working directory. Errors not ignores. No custom config. Result has violations.
@@ -63,7 +63,7 @@ class CommandExceptionTest extends TestCase
                 [],
                 1,
                 getcwd(),
-                getcwd() . '/license-check.yml',
+                [getcwd() . '/license-check.yml'],
                 ['VIOLATION'],
             ],
             // Actual working directory. Errors are ignores. No custom config. Result has violations.
@@ -73,7 +73,7 @@ class CommandExceptionTest extends TestCase
                 ],
                 0,
                 getcwd(),
-                getcwd() . '/license-check.yml',
+                [getcwd() . '/license-check.yml'],
                 ['VIOLATION'],
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has no violations.
@@ -83,7 +83,7 @@ class CommandExceptionTest extends TestCase
                 ],
                 0,
                 '/test-directory',
-                '/test-directory/license-check.yml',
+                ['/test-directory/license-check.yml'],
                 [],
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has violations.
@@ -93,7 +93,7 @@ class CommandExceptionTest extends TestCase
                 ],
                 1,
                 '/test-directory',
-                '/test-directory/license-check.yml',
+                ['/test-directory/license-check.yml'],
                 ['VIOLATION'],
             ],
             // Custom working directory. Errors are ignores. No custom config. Result has violations.
@@ -104,29 +104,29 @@ class CommandExceptionTest extends TestCase
                 ],
                 0,
                 '/test-directory',
-                '/test-directory/license-check.yml',
+                ['/test-directory/license-check.yml'],
                 ['VIOLATION'],
             ],
             // Custom working directory. Errors not ignores. Custom config. Result has no violations.
             [
                 [
                     'directory' => '/test-directory',
-                    '--configuration' => '/testconfig.yml',
+                    '--configuration' => ['/testconfig.yml'],
                 ],
                 0,
                 '/test-directory',
-                '/testconfig.yml',
+                ['/testconfig.yml'],
                 [],
             ],
             // Custom working directory. Errors not ignores. No custom config. Result has violations.
             [
                 [
                     'directory' => '/test-directory',
-                    '--configuration' => '/testconfig.yml',
+                    '--configuration' => ['/testconfig.yml'],
                 ],
                 1,
                 '/test-directory',
-                '/testconfig.yml',
+                ['/testconfig.yml'],
                 ['VIOLATION'],
             ],
             // Custom working directory. Errors are ignores. No custom config. Result has violations.
@@ -134,11 +134,11 @@ class CommandExceptionTest extends TestCase
                 [
                     'directory' => '/test-directory',
                     '--ignore-errors' => true,
-                    '--configuration' => '/testconfig.yml',
+                    '--configuration' => ['/testconfig.yml'],
                 ],
                 0,
                 '/test-directory',
-                '/testconfig.yml',
+                ['/testconfig.yml'],
                 ['VIOLATION'],
             ],
         ];
@@ -171,6 +171,7 @@ class CommandExceptionTest extends TestCase
 
         self::assertTrue($this->fixture->getDefinition()->hasOption('configuration'));
         self::assertTrue($this->fixture->getDefinition()->getOption('configuration')->isValueRequired());
+        self::assertTrue($this->fixture->getDefinition()->getOption('configuration')->isArray());
 
         self::assertTrue($this->fixture->getDefinition()->hasOption('ignore-errors'));
         self::assertFalse($this->fixture->getDefinition()->getOption('ignore-errors')->isValueOptional());
@@ -185,7 +186,7 @@ class CommandExceptionTest extends TestCase
      * @param string[] $input
      * @param int $resultCode
      * @param string $directory
-     * @param string $configPath
+     * @param array $configFiles
      * @param string[] $violations
      *
      * @return void
@@ -194,13 +195,13 @@ class CommandExceptionTest extends TestCase
         array $input,
         int $resultCode,
         string $directory,
-        string $configPath,
+        array $configFiles,
         array $violations,
     ): void {
         $this
             ->configurationLoader
             ->method('load')
-            ->with($configPath)
+            ->with($configFiles)
             ->willReturn($configuration = $this->createMock(Configuration::class));
 
         $resultSet = new Result();
