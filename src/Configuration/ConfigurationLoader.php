@@ -82,7 +82,7 @@ class ConfigurationLoader
     /**
      * Create a configuration object from a file.
      *
-     * @param array $configFiles Array of configuration files with path.
+     * @param string[] $configFiles Array of configuration files with path.
      *
      * @throws ConfigurationNotFoundException Exception if configuration file was not found.
      * @throws ConfigurationParseException Exception if configuration cannot be parsed.
@@ -119,7 +119,7 @@ class ConfigurationLoader
      * @throws ConfigurationNotFoundException Exception if configuration file was not found.
      * @throws ConfigurationParseException Exception if configuration cannot be parsed.
      *
-     * @return array
+     * @return array<string, array<array<string>|string>>
      */
     private function parseConfigFile(string $fileName): array
     {

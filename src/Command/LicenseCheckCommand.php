@@ -90,7 +90,7 @@ class LicenseCheckCommand extends Command
             ->addOption(
                 self::OPTION_CONFIGURATION,
                 'c',
-                InputOption::VALUE_REQUIRED |InputOption::VALUE_IS_ARRAY,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'List of configuration files.',
             )
             ->addOption(
@@ -125,6 +125,7 @@ class LicenseCheckCommand extends Command
 
         $configFiles = $input->getOption(self::OPTION_CONFIGURATION);
 
+        assert(is_array($configFiles));
         if (count($configFiles) === 0) {
             $configFiles[] = $workingDirectory . '/license-check.yml';
         }
