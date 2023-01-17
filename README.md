@@ -22,7 +22,7 @@ allowed-packages:
   composer:
     - /best-it\/license-check/
     - /best-it\/.*/
-  npm:
+  node:
     - /test\/test/
 ```
 
