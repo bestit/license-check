@@ -63,6 +63,12 @@ class NodeLicenseLoaderTest extends TestCase
             ->with($path = '/directory')
             ->willReturnSelf();
 
+        $this
+            ->finder
+            ->method('depth')
+            ->with($depth = random_int(0, 100))
+            ->willReturnSelf();
+
         $iterator = new ArrayIterator([
             $file1 = $this->createMock(SplFileInfo::class),
             $file2 = $this->createMock(SplFileInfo::class),
@@ -92,7 +98,7 @@ class NodeLicenseLoaderTest extends TestCase
                 'b' => ['MIT'],
                 'c' => ['BSD'],
             ],
-            $this->fixture->getLicenses($path),
+            $this->fixture->getLicenses($path, $depth),
         );
     }
 

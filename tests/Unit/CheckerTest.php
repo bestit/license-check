@@ -61,6 +61,7 @@ class CheckerTest extends TestCase
      */
     public function testValidate(): void
     {
+        $depth = random_int(0, 100);
         $path = '/test-directory';
 
         $this
@@ -71,7 +72,7 @@ class CheckerTest extends TestCase
         $this
             ->loader1
             ->method('getLicenses')
-            ->with($path)
+            ->with($path, $depth)
             ->willReturn([
                 'vendorA/package1' => [
                     'MIT',
@@ -95,7 +96,7 @@ class CheckerTest extends TestCase
         $this
             ->loader2
             ->method('getLicenses')
-            ->with($path)
+            ->with($path, $depth)
             ->willReturn([
                 'vendorD/package1' => [
                     'MIT',
@@ -110,7 +111,7 @@ class CheckerTest extends TestCase
 
         $configuration = (new ConfigurationLoader())->load([__DIR__ . '/../fixtures/configuration/config1.yml']);
 
-        $result = $this->fixture->validate($configuration, $path);
+        $result = $this->fixture->validate($configuration, $path, $depth);
 
         self::assertEquals(
             [

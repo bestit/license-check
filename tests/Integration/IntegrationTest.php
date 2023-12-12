@@ -25,31 +25,43 @@ class IntegrationTest extends TestCase
             [
                 __DIR__ . '/../fixtures/configuration/config1.yml',
                 __DIR__ . '/../fixtures/composer/fixture1/',
+                null,
                 false,
             ],
             [
                 __DIR__ . '/../fixtures/configuration/config2.yml',
                 __DIR__ . '/../fixtures/composer/fixture1/',
+                null,
                 true,
             ],
             [
                 __DIR__ . '/../fixtures/configuration/config3.yml',
                 __DIR__ . '/../fixtures/node/fixture1/',
+                null,
                 true,
             ],
             [
                 __DIR__ . '/../fixtures/configuration/config4.yml',
                 __DIR__ . '/../fixtures/node/fixture1/',
+                null,
                 true,
             ],
             [
                 __DIR__ . '/../fixtures/configuration/config3.yml',
                 __DIR__ . '/../fixtures/node/fixture2/',
+                null,
                 false,
             ],
             [
-                __DIR__ . '/../fixtures/configuration/config4.yml',
-                __DIR__ . '/../fixtures/node/fixture2/',
+                __DIR__ . '/../fixtures/configuration/config1.yml',
+                __DIR__ . '/../fixtures/composer/fixture3/',
+                null,
+                false,
+            ],
+            [
+                __DIR__ . '/../fixtures/configuration/config1.yml',
+                __DIR__ . '/../fixtures/composer/fixture3/',
+                0,
                 true,
             ],
         ];
@@ -62,17 +74,27 @@ class IntegrationTest extends TestCase
      *
      * @param string $configuration
      * @param string $directory
+     * @param int|null $depth
      * @param bool $valid
      *
      * @return void
      */
-    public function test(string $configuration, string $directory, bool $valid): void
+    public function test(string $configuration, string $directory, ?int $depth, bool $valid): void
     {
-        $command = sprintf(
-            __DIR__ . '/../../bin/license-check %s --configuration %s',
-            $directory,
-            $configuration,
-        );
+        if ($depth === null) {
+            $command = sprintf(
+                __DIR__ . '/../../bin/license-check %s --configuration %s',
+                $directory,
+                $configuration,
+            );
+        } else {
+            $command = sprintf(
+                __DIR__ . '/../../bin/license-check %s --configuration %s --depth %d',
+                $directory,
+                $configuration,
+                $depth,
+            );
+        }
 
         $output = null;
         $resultCode = null;

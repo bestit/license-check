@@ -1,0 +1,10 @@
+{
+    "packages": [
+        {
+            "name": "vendorA/package1",
+            "license": [
+                "MIT"
+            ]
+        }
+    ]
+}

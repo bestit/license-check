@@ -53,7 +53,7 @@ class ComposerLicenseLoaderTest extends TestCase
     {
         $this
             ->finder
-            ->method('name')
+            ->method('path')
             ->with('composer.lock')
             ->willReturnSelf();
 
@@ -61,6 +61,12 @@ class ComposerLicenseLoaderTest extends TestCase
             ->finder
             ->method('in')
             ->with($path = '/directory')
+            ->willReturnSelf();
+
+        $this
+            ->finder
+            ->method('depth')
+            ->with($depth = random_int(0, 100))
             ->willReturnSelf();
 
         $iterator = new ArrayIterator([
@@ -91,7 +97,7 @@ class ComposerLicenseLoaderTest extends TestCase
                 'vendorC/package2' => ['Apache-2.0'],
                 'vendorD/package1' => ['AGPL-3.0-only'],
             ],
-            $this->fixture->getLicenses($path),
+            $this->fixture->getLicenses($path, $depth),
         );
     }
 
@@ -104,7 +110,7 @@ class ComposerLicenseLoaderTest extends TestCase
     {
         $this
             ->finder
-            ->method('name')
+            ->method('path')
             ->with('composer.lock')
             ->willReturnSelf();
 
@@ -144,7 +150,7 @@ class ComposerLicenseLoaderTest extends TestCase
     {
         $this
             ->finder
-            ->method('name')
+            ->method('path')
             ->with('composer.lock')
             ->willReturnSelf();
 

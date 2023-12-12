@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace BestIt\LicenseCheck\LicenseLoader;
 
-use BestIt\LicenseCheck\LicenseLoader\Exception\LicenseLoaderException;
-use Symfony\Component\Finder\Finder;
+use BestIt\LicenseCheck\LicenseLoader\Result\Result;
 
 /**
  * License loader for composer packages.
@@ -13,55 +12,32 @@ use Symfony\Component\Finder\Finder;
  * @author best it AG <info@bestit.de>
  * @package BestIt\LicenseCheck\LicenseLoader
  */
-class ComposerLicenseLoader implements LicenseLoaderInterface
+class ComposerLicenseLoader extends AbstractLicenseLoader
 {
     /**
-     * Finder to get composer.json files.
+     * Pattern for composer files.
      *
-     * @var Finder $finder
+     * @var string|null
      */
-    private Finder $finder;
+    protected ?string $searchPattern = 'composer.lock';
 
     /**
-     * ComposerLicenseLoader constructor.
+     * Parse composer.lock content.
      *
-     * @param Finder $finder
+     * @param mixed[] $decodedContent
+     * @param Result $result
+     *
+     * @return void
      */
-    public function __construct(Finder $finder)
+    protected function parseFile(array $decodedContent, Result $result): void
     {
-        $this->finder = $finder;
-    }
-
-    /**
-     * Get used licenses in the specified path.
-     *
-     * @param string $path
-     *
-     * @return array<array<string>>
-     */
-    public function getLicenses(string $path): array
-    {
-        $result = [];
-
-        foreach ($this->finder->name('composer.lock')->in($path) as $file) {
-            $filePath = $file->getPathname();
-            $content = $file->getContents();
-            if (!is_string($content)) {
-                throw new LicenseLoaderException(sprintf('Cannot read content of file %s', $filePath));
-            }
-
-            $decodedContent = json_decode($content, true);
-            if (!is_array($decodedContent)) {
-                throw new LicenseLoaderException(sprintf('Cannot decode content of file %s', $filePath));
-            }
-
-            // ToDo: Check json structure.
-            foreach ($decodedContent['packages'] as $package) {
-                $result[$package['name']] = $package['license'] ?? [];
-            }
+        // ToDo: Check json structure.
+        foreach ($decodedContent['packages'] as $package) {
+            $result->add(
+                (string) $package['name'],
+                $package['license'] ?? [],
+            );
         }
-
-        return $result;
     }
 
     /**
